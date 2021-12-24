@@ -1,0 +1,315 @@
+/*
+23	Write C++ program for storing binary number using doubly linked lists. Write functions-
+a)	To compute 1‘s and 2‘s complement
+b)	Add two binary numbers
+*/
+
+#include <iostream>
+using namespace std;
+#include<queue>
+class binary
+{
+	struct node
+	{
+		int data;
+		node *prev;
+		node *next;
+	}*start, *last;
+	
+	public:
+		binary()
+		{
+			start = NULL;
+			last = NULL;
+		}
+		
+		void create();
+		void display();
+		void ones_comp();
+		void twos_comp();
+		void add(binary);
+		int len();
+};
+void binary::display()
+{
+	node *t;
+	if(start==NULL)
+	{
+		cout<<"binary class is empty"<<endl;
+		return;
+	}
+	else
+	{
+		t = start;
+		while(t!=NULL)
+		{
+			cout<<t->data<<" ";
+			t = t->next;
+		}
+	}
+	cout<<endl;
+}
+void binary::create()
+{
+	node *temp;
+		
+	temp = new node;
+	temp->next = NULL;
+	temp->prev = NULL;
+	cout<<"Enter the data: "<<endl;
+	cin>>temp->data;
+	
+	if (start == NULL)
+	{
+		start = temp;
+		last = temp;
+	}
+	else
+	{
+		last->next = temp;
+		temp->prev = last;
+		last = temp;
+	}	
+}
+void binary:: ones_comp()
+{
+	node *temp;
+	temp = start;
+	while(temp!=NULL)
+	{
+		if(temp->data == 1)
+		{
+			temp->data = 0;
+		}
+		else
+		{
+			temp->data=1;
+		}
+		temp = temp->next;
+	}
+}
+
+void binary::twos_comp()
+{
+	node *temp;
+	temp = last;
+	int flag1=0;
+	int flag2=0;
+	
+	while (temp!= NULL)
+	{
+		while(temp->data==0 && flag1==0)  // keep on skipping bit=0 until we get first 1 from RHS
+		{
+			temp=temp->prev;
+		}
+		flag1=1;
+		if(flag2==0)    // skip first occurence of bit=1
+		{
+			temp=temp->prev;
+			flag2=1;
+		}
+		else
+		{
+			if(temp->data==0)   
+			{
+			
+				temp->data=1;  // change the bit
+				temp=temp->prev;	
+			}
+			else
+			{
+				temp->data=0;  // change the bit
+				temp=temp->prev;
+			}
+		}
+		
+	}
+		
+}
+
+int binary::len()
+{
+	node *temp;
+	temp = start;
+	int length=0;
+	while(temp!= NULL)
+	{
+		length++;
+		temp=temp->next;
+	}
+	return length;
+}
+
+void binary::add(binary const obj2)
+{	
+	node *temp, *temp1, *curr;
+	int carry = 0;
+	temp1 = last;
+	temp = obj2.last;
+	
+	while(temp != NULL)
+	{
+		if(temp1->data == 1 && temp->data == 1)
+		{
+			if(carry == 1)
+			{
+				temp1->data = 1;
+				carry = 1;
+			}
+			else
+			{
+				temp1->data = 0;
+				carry = 1;
+			}
+		}
+		else if(temp1->data == 0 && temp->data == 0)
+		{
+			if(carry == 1)
+			{
+				temp1->data = 1;
+				carry = 0;
+			}
+			else
+			{
+				temp1->data = 0;
+				carry = 0;
+			}
+		}
+		else if(temp1->data == 0 && temp->data == 1)
+		{
+			if(carry == 1)
+			{
+				temp1->data = 0;
+				carry = 1;
+			}
+			else
+			{
+				temp1->data = 1;
+				carry = 0;
+			}
+		}
+		else  // 1  and   0
+		{
+			if(carry == 1)
+			{
+				temp1->data = 0;
+				carry = 1;
+			}
+			else
+			{
+				temp1->data = 1;
+				carry = 0;
+		    }
+		}
+		
+		temp = temp->prev;
+		temp1 = temp1->prev;
+	}
+	
+	while(temp1 != NULL)
+	{
+			if(temp1->data == 1 && carry == 1)
+			{
+				temp1->data = 0;
+				carry =1;
+			}
+			else if(temp1->data == 0 && carry == 1)
+			{
+				temp1->data = 1;
+				carry = 0;
+			}
+			else if(temp1->data == 1 && carry == 0)
+			{
+				temp1->data = 1;
+				carry =0;
+			}
+			else   // 0 and 0
+			{
+				temp1->data =0;
+				carry =0;
+			}
+			temp1 = temp1->prev;
+		}
+		
+		if (carry == 1)
+		{
+			cout<<"Carry is 1"<<endl;
+			curr = new node;
+			curr->next = start;
+			curr->prev = NULL;
+			curr->data = carry;
+			start->prev = curr;
+			start = curr;
+		}
+}
+
+int main()
+{
+	binary obj1, obj2;
+	int n, m, ch;
+	cout<<"Enter the number of bits in the binary number: "<<endl;
+	cin>>n;
+	for (int i = 0; i < n; i++)
+	{
+		obj1.create();
+	}
+	cout<<"first number is :"<<endl;
+	obj1.display();
+	cout<<"Enter the number of bits in the binary number: "<<endl;
+	cin>>m;
+	for (int i = 0; i < m; i++)
+	{
+		obj2.create();
+	}
+	cout<<"second number is :"<<endl;
+	obj2.display();
+	do
+	{
+		cout<<"\n1.Ones Complement\n2.Twos Complement\n3.Addition\n0.Exit\nEnter your choice: "<<endl;
+		cin>>ch;
+		switch(ch)
+		{
+			case 1:
+			{
+				obj1.ones_comp();
+				obj2.ones_comp();
+				cout<<"Ones Complement of 1st number is :"<<endl;
+				obj1.display();
+				cout<<"Ones Complement of 2nd number is :"<<endl;
+				obj2.display();
+				break;
+			}
+			case 2:
+			{
+				obj1.twos_comp();
+				obj2.twos_comp();
+				cout<<"Twos Complement of 1st number is :"<<endl;
+				obj1.display();
+				cout<<"Twos Complement of 2nd number is :"<<endl;
+				obj2.display();
+				break;
+			}
+			case 3:
+			{
+				binary obj3;
+				if (n>=m)
+				{
+					obj3 = obj1;
+					cout<<"Obj1..."<<endl;
+					obj3.add(obj2);
+					obj3.display();
+				}
+				else
+				{
+					obj3 = obj2;
+					cout<<"Obj2..."<<endl;
+					obj3.add(obj1);
+					obj3.display();
+				}
+				break;
+			}
+		}
+	}while(ch!=0);
+	 return 0;	
+}
+
