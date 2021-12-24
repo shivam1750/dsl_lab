@@ -1,0 +1,67 @@
+'''                        //   QUESTION  //                                                                    
+Write a python program to store marks stored in subject "Fundamentals of Data Structure" by
+ N students in the class. Write functions to compute following:
+        1. The average score of the class.
+        2. Highest score and lowest score of the class.
+        3. Count of students who were absent for the test.
+        4. Display mark with highest frequency.
+'''
+
+n = int(input("Enter number of students in class: "))
+s = int(input("The test was of how many marks? "))
+
+marks = []
+for i in range(n):
+    a = int(input("Enter the marks of students (enter -1 in absent): "))
+    marks.append(a)
+print(marks)
+
+
+def average():
+    add = 0
+    for j in marks:
+        add = add + j
+    ave = add / n
+    print(ave)
+
+
+def max_min():
+    ls = marks[0]
+    hs = marks[0]
+    for i in marks:
+        if i == -1:
+            continue
+        if ls > i:
+            ls = i
+        if hs < i:
+            hs = i
+    print("highest marks in class are: ", hs)
+    print("lowest marks in class are: ", ls)
+
+
+def absent():
+    count = 0
+    for i in marks:
+        if i == -1:
+            count += 1
+    print("number of student absent for test are: ", count)
+
+
+def highFreq():
+    max = 1
+    Hi_f_m = 0
+    for i in range(0, n - 1):
+        c = 1
+        for j in range(i + 1, n):
+            if marks[i] == marks[j]:
+                c += 1
+            if max < c:
+                max = c
+                Hi_f_m = marks[i]
+    print(f"mark with highest frequency are {Hi_f_m} and occurred {max} times ")
+
+
+average()
+max_min()
+absent()
+highFreq()
