@@ -1,0 +1,45 @@
+def sort(rollNO,total):
+    for i in range(total-1):
+        for j in range(0,total-i-1):
+            if rollNO[j]>rollNO[j+1]:
+                temp = rollNO[j+1]
+                rollNO[j+1]=rollNO[j]
+                rollNO[j]=temp
+
+
+rollNO = []
+total = int(input("tolat number of students in club: "))
+print("Enter the roll no. of students in club in ascending order: ")
+
+for i in range(total):
+    a = int(input())
+    rollNO.append(a)
+print(rollNO)
+
+sort(rollNO, total)
+print("sorted lis of roll no : ",rollNO)
+
+b = int(input("Enter the roll number you want to search: "))
+
+def ternarySearch(start, total, b, rollNo):
+    mid1 = int(start + (total - start) // 3)
+    mid2 = int(total - (total - start) // 3)
+    if total >= start:
+        if rollNO[mid1] == b:
+            return mid1
+        if rollNO[mid2] == b:
+            return mid2
+        if b < rollNO[mid1]:
+            ternarySearch(start, mid1 - 1, b, rollNo)
+        elif b > rollNO[mid2]:
+            ternarySearch(mid2 + 1, total, b, rollNo)
+        else:
+            ternarySearch(mid1 + 1, mid2 - 1, b, rollNo)
+    else:
+        print("<--------  Invalid input !!!  --------->")
+    return -1
+
+
+result = ternarySearch(0,total,b,rollNO)
+print(f"index of {b} is {result} .")
+
